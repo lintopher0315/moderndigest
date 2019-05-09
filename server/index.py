@@ -6,10 +6,14 @@ app = Flask(__name__)
 def hello_world():
     return "Hello, World!"
 
-@app.route("/digest/twitter")
+@app.route("/digest/twitter", methods = ['GET', 'POST'])
 def get_twitter():
-    return request.get_json()
+    print(request)
+    print(request.get_data())
+    json_send = {'chris': 500, 'lin': 200}
+    return jsonify(json_send)
 
 @app.route("/digest/newspaper")
 def get_newspaper():
-    return request.get_json()
+    json_send = {'chris': 500, 'lin': 200}
+    return jsonify(json_send)
