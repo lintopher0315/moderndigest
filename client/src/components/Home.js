@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, Col } from 'react-bootstrap';
+import { Button, Form, FormGroup, Col } from 'react-bootstrap';
+import FormControl from 'react-bootstrap/FormControl';
 
 class Home extends Component {
 
     constructor(props) {
         super(props);
 
+        this.textInput = React.createRef();
+
         this.state = {
+            value: "",
             tweets: [],
             links: "",
         };
@@ -16,7 +20,7 @@ class Home extends Component {
         fetch('/digest/twitter', {
             method: 'POST',
             body: JSON.stringify({
-                query: this.textInput.value,
+                query: this.state.value,
             }),
             headers: {
                 "Content-Type": "application/json"
@@ -28,16 +32,20 @@ class Home extends Component {
         })
     }
 
+    changeValue() {
+        this.setState({value: this.textInput.current.value})
+    }
+
     render() {
         return (
             <div className="feed">
                 <Form horizontal>
-                    <FormGroup controlId="query">
+                    <FormGroup controlId="text">
                         <Col sm={2}>
                             Search:
                         </Col>
                         <Col sm={9}>
-                            <FormControl type="query" placeholder="Search" inputRef={input => this.textInput = input}/>
+                            <FormControl type="text" placeholder="Search" ref={this.textInput} onChange={() => this.changeValue()}/>
                         </Col>
                     </FormGroup>
 
