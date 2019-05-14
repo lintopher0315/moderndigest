@@ -13,12 +13,24 @@ class Home extends Component {
             value: "",
             tweets: [],
             sentiment: [],
-            links: "",
+            links: [],
         };
     }
 
     searchQuery() {
-        fetch('/digest/twitter', {
+        return Promise.all([this.searchTwitter(), this.searchNewspaper()])
+        .then(([tweets, news]) => {
+            for (var i = 0; i < tweets.length; i++) {
+                this.setState({tweets: [...this.state.tweets, tweets[i].text], sentiment: [...this.state.sentiment, tweets[i].sentiment]})
+            }
+            for (i = 0; i < news.length; i++) {
+                this.setState({links: [...this.state.links, news[i]]})
+            }
+        })
+    }
+
+    searchTwitter() {
+        return fetch('/digest/twitter', {
             method: 'POST',
             body: JSON.stringify({
                 query: this.state.value,
@@ -28,12 +40,19 @@ class Home extends Component {
             }
         })
         .then(res => res.json())
-        .then(json => {
-            this.setState({links: "asdf"});
-            for (var i = 0; i < json.length; i++) {
-                this.setState({tweets: [...this.state.tweets, json[i].text], sentiment: [...this.state.sentiment, json[i].sentiment]})
+    }
+
+    searchNewspaper() {
+        return fetch('/digest/newspaper', {
+            method: 'POST',
+            body: JSON.stringify({
+                query: this.state.value,
+            }),
+            headers: {
+                "Content-Type": "application/json"
             }
         })
+        .then(res => res.json())
     }
 
     changeValue() {

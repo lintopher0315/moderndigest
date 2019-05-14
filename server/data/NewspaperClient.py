@@ -25,7 +25,7 @@ class NewspaperClient(object):
                     urls.append(article.url)
         
         return urls
-
+'''
 def main():
     client = NewspaperClient()
     query = client.parse_query("trump")
@@ -35,3 +35,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+'''
