@@ -12,6 +12,7 @@ class Home extends Component {
         this.state = {
             value: "",
             tweets: [],
+            sentiment: [],
             links: "",
         };
     }
@@ -28,7 +29,10 @@ class Home extends Component {
         })
         .then(res => res.json())
         .then(json => {
-            console.log(json);
+            this.setState({links: "asdf"});
+            for (var i = 0; i < json.length; i++) {
+                this.setState({tweets: [...this.state.tweets, json[i].text], sentiment: [...this.state.sentiment, json[i].sentiment]})
+            }
         })
     }
 
@@ -59,6 +63,7 @@ class Home extends Component {
                 <br />
                 <p>
                     {this.state.tweets}
+                    {this.state.sentiment}
                     <br />
                     <br />
                     {this.state.links}

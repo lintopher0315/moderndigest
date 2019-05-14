@@ -5,16 +5,16 @@ from tweepy import OAuthHandler
 from textblob import TextBlob
 from dotenv import load_dotenv
 
-load_dotenv('.env')
+load_dotenv('./server/data/.env')
 
 class TwitterClient(object):
 
     def __init__(self):
 
-        consumer_key = os.getenv('API_KEY');
-        consumer_secret_key = os.getenv('API_SECRET_KEY');
-        access_token = os.getenv('ACCESS_TOKEN');
-        access_token_secret = os.getenv('ACCESS_TOKEN_SECRET');
+        consumer_key = os.getenv('API_KEY')
+        consumer_secret_key = os.getenv('API_SECRET_KEY')
+        access_token = os.getenv('ACCESS_TOKEN')
+        access_token_secret = os.getenv('ACCESS_TOKEN_SECRET')
 
         try:
             self.auth = tweepy.OAuthHandler(consumer_key, consumer_secret_key)
@@ -41,7 +41,7 @@ class TwitterClient(object):
 
         try:
             fetched_tweets = self.api.search(q = query, count = count)
-
+            
             for tweet in fetched_tweets:
                 parsed_tweet = {}
 
@@ -56,7 +56,7 @@ class TwitterClient(object):
             return tweets
         except tweepy.TweepError as e:
             print("Error getting tweets")
-
+'''
 def main():
     api = TwitterClient()
     tweets = api.get_tweets(query = 'Donald Trump', count = 200)
@@ -83,3 +83,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+'''
