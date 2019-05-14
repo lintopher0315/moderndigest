@@ -20,6 +20,7 @@ class Home extends Component {
     searchQuery() {
         return Promise.all([this.searchTwitter(), this.searchNewspaper()])
         .then(([tweets, news]) => {
+            this.setState({tweets: [], sentiment: [], links: []})
             for (var i = 0; i < tweets.length; i++) {
                 this.setState({tweets: [...this.state.tweets, tweets[i].text], sentiment: [...this.state.sentiment, tweets[i].sentiment]})
             }
