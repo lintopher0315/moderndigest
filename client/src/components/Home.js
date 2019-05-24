@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Form, FormGroup, Col } from 'react-bootstrap';
 import FormControl from 'react-bootstrap/FormControl';
+import { Redirect } from 'react-router-dom';
 
 class Home extends Component {
 
@@ -14,6 +15,7 @@ class Home extends Component {
             tweets: [],
             sentiment: [],
             links: [],
+            redirect: false
         };
     }
 
@@ -27,6 +29,7 @@ class Home extends Component {
             for (i = 0; i < news.length; i++) {
                 this.setState({links: [...this.state.links, news[i]]})
             }
+            this.setState({redirect: true})
         })
     }
 
@@ -61,6 +64,19 @@ class Home extends Component {
     }
 
     render() {
+        if (this.state.redirect) {
+            return <Redirect to={{
+                pathname: `/search/q=${this.state.value}`,
+                state: {
+                    tweets: this.state.tweets,
+                    sentiment: this.state.sentiment,
+                    links: this.state.links,
+                }
+            }}/>;
+        }
+        else {
+
+        }
         return (
             <div className="feed">
                 <Form horizontal>
@@ -79,15 +95,6 @@ class Home extends Component {
                         </Col>
                     </FormGroup>
                 </Form>
-
-                <br />
-                <p>
-                    {this.state.tweets}
-                    {this.state.sentiment}
-                    <br />
-                    <br />
-                    {this.state.links}
-                </p>
             </div>
         );
     }

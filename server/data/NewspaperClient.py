@@ -32,7 +32,7 @@ def main():
     articles = client.get_urls(query)
 
     print(articles)
-
+    
 if __name__ == "__main__":
     main()
 '''
