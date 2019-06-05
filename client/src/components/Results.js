@@ -6,7 +6,7 @@ class Results extends Component {
         super(props);
 
         this.state = {
-            value: this.props.location.state.value,
+            value: this.props.value,
             tweets: [],
             sentiment: [],
             links: [],
@@ -53,6 +53,7 @@ class Results extends Component {
     }
 
     componentDidMount() {
+        console.log(this.state.value)
         this.getResults()
     }
 
