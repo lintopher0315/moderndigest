@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Button, Form, FormGroup, Col } from 'react-bootstrap';
+import { Button, Form, FormGroup, Col, Container, Row } from 'react-bootstrap';
 import FormControl from 'react-bootstrap/FormControl';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Home from './Home';
 import Results from './Results'
 
@@ -26,30 +26,49 @@ class Header extends Component {
     render() {
         return (
             <div className="feed">
-                <Form horizontal>
-                    <FormGroup controlId="text">
-                        <Col sm={2}>
-                            Search:
+                <Container className="header" fluid={true} style={{background: '#ff99de'}}>
+                    <Row>
+                        <Col xl lg={true} style={styles.title}>
+                            <p>modern digest</p>
                         </Col>
-                        <Col sm={9}>
-                            <FormControl type="text" placeholder="Search" ref={this.textInput}/>
-                        </Col>
-                    </FormGroup>
 
-                    <FormGroup>
-                        <Col smOffset={1} sm={10}>
-                            <Link to={`/search/q=${this.state.value}`}>
-                                <Button bsStyle="default" onClick={this.changeValue.bind(this)}>Search</Button>
-                            </Link>
+                        <Col xl lg={true} style={{paddingTop: 25}}>
+                            <Form horizontal>
+                                <FormGroup>
+                                    <Row>
+                                        <Col sm={9}>
+                                            <FormControl type="text" placeholder="Search" ref={this.textInput}/>
+                                        </Col>
+                                        <Col sm={20}>
+                                            <Link to={`/search/q=${this.state.value}`}>
+                                                <Button bsStyle="default" onClick={this.changeValue.bind(this)}>Search</Button>
+                                            </Link>
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                            </Form>
                         </Col>
-                    </FormGroup>
-                </Form>
+
+                        <Col xl lg={true}>
+
+                        </Col>
+                    </Row>
+                </Container>
                 <Switch>
                     <Route exact path='/' component={Home} />
                     <Route path='/search/:query' component={() => <Results value={this.state.value}/>} />
                 </Switch>
             </div>
         );
+    }
+}
+
+let styles = {
+    title: {
+        fontFamily: 'Abril Fatface',
+        fontSize: 50,
+        textAlign: 'left',
+        paddingLeft: 50,
     }
 }
 
