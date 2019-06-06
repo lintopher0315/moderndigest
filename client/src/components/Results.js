@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Pie } from 'react-chartjs-2'
+import { TwitterTweetEmbed } from 'react-twitter-embed'
 
 class Results extends Component {
 
@@ -9,6 +10,7 @@ class Results extends Component {
         this.state = {
             value: this.props.value,
             tweets: [],
+            tweetId: [],
             sentiment: [],
             links: [],
             positive: 0,
@@ -23,7 +25,7 @@ class Results extends Component {
         .then(([tweets, news]) => {
             this.setState({tweets: [], sentiment: [], links: []})
             for (var i = 0; i < tweets.length; i++) {
-                this.setState({tweets: [...this.state.tweets, tweets[i].text], sentiment: [...this.state.sentiment, tweets[i].sentiment]})
+                this.setState({tweets: [...this.state.tweets, tweets[i].text], sentiment: [...this.state.sentiment, tweets[i].sentiment], tweetId: [...this.state.tweetId, tweets[i].id]})
             }
             for (i = 0; i < news.length; i++) {
                 this.setState({links: [...this.state.links, news[i]]})
@@ -104,6 +106,9 @@ class Results extends Component {
                     width={400}
                     height={400}
                     options={{ maintainAspectRatio: false }}
+                    />
+                    <TwitterTweetEmbed
+                        tweetId={this.state.tweetId[this.state.tweetId.length - 1].toString()}
                     />
                 </div>
             )

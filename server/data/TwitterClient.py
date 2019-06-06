@@ -45,6 +45,7 @@ class TwitterClient(object):
             for tweet in fetched_tweets:
                 parsed_tweet = {}
 
+                parsed_tweet['id'] = tweet.id_str
                 parsed_tweet['text'] = tweet.text
                 parsed_tweet['sentiment'] = self.get_tweet_sentiment(tweet.text)
 
