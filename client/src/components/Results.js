@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Pie } from 'react-chartjs-2'
 
 class Results extends Component {
 
@@ -10,6 +11,10 @@ class Results extends Component {
             tweets: [],
             sentiment: [],
             links: [],
+            positive: 0,
+            neutral: 0,
+            negative: 0,
+            loading: false,
         }
     }
 
@@ -23,6 +28,8 @@ class Results extends Component {
             for (i = 0; i < news.length; i++) {
                 this.setState({links: [...this.state.links, news[i]]})
             }
+            this.countSentiment()
+            this.setState({ loading: true })
         })
     }
 
@@ -52,19 +59,58 @@ class Results extends Component {
         .then(res => res.json())
     }
 
+    countSentiment() {
+        for (var i = 0; i < this.state.sentiment.length; i++) {
+            if (this.state.sentiment[i] === "positive") {
+                this.setState({ positive: this.state.positive + 1 })
+            }
+            else if (this.state.sentiment[i] === "neutral") {
+                this.setState({ neutral: this.state.neutral + 1 })
+            }
+            else {
+                this.setState({ negative: this.state.negative + 1 })
+            }
+        }
+    }
+
     componentDidMount() {
-        console.log(this.state.value)
         this.getResults()
     }
 
     render() {
+        if (this.state.loading) {
+            return (
+                <div className="result">
+                    <Pie data={{
+                        labels: [
+                            'Positive',
+                            'Neutral',
+                            'Negative'
+                        ],
+                        datasets: [{
+                            data: [this.state.positive, this.state.neutral, this.state.negative],
+                            backgroundColor: [
+                                '#FF6384',
+                                '#36A2EB',
+                                '#FFCE56'
+                            ],
+                            hoverBackgroundColor: [
+                                '#FF6384',
+		                        '#36A2EB',
+                                '#FFCE56'
+                            ]
+                        }]
+                    }}
+                    width={400}
+                    height={400}
+                    options={{ maintainAspectRatio: false }}
+                    />
+                </div>
+            )
+        }
         return (
-            <div className="result">
-                {this.state.tweets}
-                {this.state.sentiment}
-                <br />
-                <br />
-                {this.state.links}
+            <div className="load">
+
             </div>
         )
     }
