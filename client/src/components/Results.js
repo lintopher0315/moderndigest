@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Pie } from 'react-chartjs-2'
-import { TwitterTweetEmbed } from 'react-twitter-embed'
+import TwitterWindow from './TwitterWindow'
 
 class Results extends Component {
 
@@ -107,9 +107,7 @@ class Results extends Component {
                     height={400}
                     options={{ maintainAspectRatio: false }}
                     />
-                    <TwitterTweetEmbed
-                        tweetId={this.state.tweetId[this.state.tweetId.length - 1].toString()}
-                    />
+                    <TwitterWindow id={this.state.tweetId}/>
                 </div>
             )
         }
