@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Pie } from 'react-chartjs-2'
+import { Col, Container, Row } from 'react-bootstrap';
 import TwitterWindow from './TwitterWindow'
 
 class Results extends Component {
@@ -83,31 +84,40 @@ class Results extends Component {
         if (this.state.loading) {
             return (
                 <div className="result">
-                    <Pie data={{
-                        labels: [
-                            'Positive',
-                            'Neutral',
-                            'Negative'
-                        ],
-                        datasets: [{
-                            data: [this.state.positive, this.state.neutral, this.state.negative],
-                            backgroundColor: [
-                                '#FF6384',
-                                '#36A2EB',
-                                '#FFCE56'
-                            ],
-                            hoverBackgroundColor: [
-                                '#FF6384',
-		                        '#36A2EB',
-                                '#FFCE56'
-                            ]
-                        }]
-                    }}
-                    width={400}
-                    height={400}
-                    options={{ maintainAspectRatio: false }}
-                    />
-                    <TwitterWindow id={this.state.tweetId}/>
+                    <Container className="twitter" fluid={true} style={{background: '#f4d4e9'}}>
+                        <Row style={{paddingTop: 20, paddingBottom: 20}}>
+                            <Col md lg={true}>
+                                <Pie data={{
+                                    labels: [
+                                        'Positive',
+                                        'Neutral',
+                                        'Negative'
+                                    ],
+                                    datasets: [{
+                                        data: [this.state.positive, this.state.neutral, this.state.negative],
+                                        backgroundColor: [
+                                            '#FF6384',
+                                            '#36A2EB',
+                                            '#FFCE56'
+                                        ],
+                                        hoverBackgroundColor: [
+                                            '#FF6384',
+                                            '#36A2EB',
+                                            '#FFCE56'
+                                        ]
+                                    }]
+                                }}
+                                //width={400}
+                                //height={400}
+                                //options={{ maintainAspectRatio: false }}
+                                />
+                            </Col>
+
+                            <Col md lg={true}>
+                                <TwitterWindow id={this.state.tweetId}/>
+                            </Col>
+                        </Row>
+                    </Container>
                 </div>
             )
         }
