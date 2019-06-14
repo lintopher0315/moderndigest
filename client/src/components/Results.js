@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Pie } from 'react-chartjs-2'
 import { Col, Container, Row } from 'react-bootstrap';
+import WordCloud from 'react-d3-cloud'
 import TwitterWindow from './TwitterWindow'
 
 class Results extends Component {
@@ -14,6 +15,8 @@ class Results extends Component {
             tweetId: [],
             sentiment: [],
             links: [],
+            keywords: [],
+            worddata: [],
             positive: 0,
             neutral: 0,
             negative: 0,
@@ -24,15 +27,16 @@ class Results extends Component {
     getResults() {
         return Promise.all([this.searchTwitter(), this.searchNewspaper()])
         .then(([tweets, news]) => {
-            this.setState({tweets: [], sentiment: [], links: []})
+            this.setState({tweets: [], sentiment: [], links: [], keywords: []})
             for (var i = 0; i < tweets.length; i++) {
                 this.setState({tweets: [...this.state.tweets, tweets[i].text], sentiment: [...this.state.sentiment, tweets[i].sentiment], tweetId: [...this.state.tweetId, tweets[i].id]})
             }
             for (i = 0; i < news.length; i++) {
                 this.setState({links: [...this.state.links, news[i]]})
             }
+            this.getKeywords()
             this.countSentiment()
-            this.setState({ loading: true })
+            this.setState({loading: true})
         })
     }
 
@@ -54,12 +58,53 @@ class Results extends Component {
             method: 'POST',
             body: JSON.stringify({
                 query: this.state.value,
+                quantity: 10,
             }),
             headers: {
                 "Content-Type": "application/json"
             }
         })
         .then(res => res.json())
+    }
+
+    getKeywords() {
+        return fetch('/digest/keywords', {
+            method: 'POST',
+            body: JSON.stringify({
+                articles: this.state.links
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(res => res.json())
+        .then(json => {
+            for (var i = 0; i < json.length; i++) {
+                this.setState({keywords: [...this.state.keywords, json[i]]})
+            }
+            this.fillCloud()
+        })
+    }
+
+    fillCloud() {
+        for (var i = 0; i < this.state.keywords.length; i++) {
+            var found = false
+            for (var j = 0; j < this.state.worddata.length; j++) {
+                if (this.state.worddata[j].text === this.state.keywords[i]) {
+                    var stateCopy = this.state.worddata;
+                    stateCopy[j].value += 1;
+                    this.setState({worddata: stateCopy});
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                var copy = this.state.worddata;
+                copy.push({text: this.state.keywords[i], value: 1})
+                this.setState({worddata: copy})
+            }
+        }
+        console.log(this.state.worddata)
     }
 
     countSentiment() {
@@ -118,6 +163,9 @@ class Results extends Component {
                             </Col>
                         </Row>
                     </Container>
+                    <WordCloud
+                        data={this.state.worddata}
+                    />
                 </div>
             )
         }

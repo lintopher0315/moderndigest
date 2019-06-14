@@ -19,8 +19,17 @@ def get_twitter():
 @app.route("/digest/newspaper", methods = ['GET', 'POST'])
 def get_newspaper():
     search = request.get_json()["query"]
+    quantity = request.get_json()["quantity"]
     client = NewspaperClient()
     query = client.parse_query(search)
-    articles = client.get_urls(query)
+    articles = client.get_urls(query, quantity)
 
     return jsonify(articles)
+
+@app.route("/digest/keywords", methods = ['GET', 'POST'])
+def get_keywords():
+    articles = request.get_json()["articles"]
+    client = NewspaperClient()
+    words = client.get_words(articles)
+
+    return jsonify(words)

@@ -12,19 +12,36 @@ class NewspaperClient(object):
             return query.lower().split(' ')
         return query.split(' ')
 
-    def get_urls(self, query):
+    def get_urls(self, query, quantity):
         urls = []
+        amount = quantity / len(self.sites)
 
         for i in range(len(self.sites)):
             paper = newspaper.build(self.sites[i], memoize_articles=False)
 
+            count = 0
             for article in paper.articles:
+                if count == amount:
+                    break
                 #print(article.url)
                 if any(element in article.url for element in query):
                     #print(article.url)
                     urls.append(article.url)
+                    count += 1
         
         return urls
+    
+    def get_words(self, articles):
+        keywords = []
+
+        for i in range(len(articles)):
+            article = Article(articles[i])
+            article.download()
+            article.parse()
+            article.nlp()
+            keywords.extend(article.keywords)
+        
+        return keywords
 '''
 def main():
     client = NewspaperClient()
