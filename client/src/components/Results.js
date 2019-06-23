@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Pie } from 'react-chartjs-2'
 import { Col, Container, Row } from 'react-bootstrap';
-import WordCloud from 'react-d3-cloud'
 import TwitterWindow from './TwitterWindow'
+import Cloud from './Cloud'
 
 class Results extends Component {
 
@@ -16,7 +16,6 @@ class Results extends Component {
             sentiment: [],
             links: [],
             keywords: [],
-            worddata: [],
             positive: 0,
             neutral: 0,
             negative: 0,
@@ -25,18 +24,17 @@ class Results extends Component {
     }
 
     getResults() {
-        return Promise.all([this.searchTwitter(), this.searchNewspaper()])
+        Promise.all([this.searchTwitter(), this.searchNewspaper()])
         .then(([tweets, news]) => {
-            this.setState({tweets: [], sentiment: [], links: [], keywords: []})
+            //this.setState({tweets: [], sentiment: [], links: []})
             for (var i = 0; i < tweets.length; i++) {
                 this.setState({tweets: [...this.state.tweets, tweets[i].text], sentiment: [...this.state.sentiment, tweets[i].sentiment], tweetId: [...this.state.tweetId, tweets[i].id]})
             }
             for (i = 0; i < news.length; i++) {
                 this.setState({links: [...this.state.links, news[i]]})
             }
-            this.getKeywords()
             this.countSentiment()
-            this.setState({loading: true})
+            this.getKeywords()
         })
     }
 
@@ -68,7 +66,7 @@ class Results extends Component {
     }
 
     getKeywords() {
-        return fetch('/digest/keywords', {
+        fetch('/digest/keywords', {
             method: 'POST',
             body: JSON.stringify({
                 articles: this.state.links
@@ -82,29 +80,8 @@ class Results extends Component {
             for (var i = 0; i < json.length; i++) {
                 this.setState({keywords: [...this.state.keywords, json[i]]})
             }
-            this.fillCloud()
+            this.setState({loading: true})
         })
-    }
-
-    fillCloud() {
-        for (var i = 0; i < this.state.keywords.length; i++) {
-            var found = false
-            for (var j = 0; j < this.state.worddata.length; j++) {
-                if (this.state.worddata[j].text === this.state.keywords[i]) {
-                    var stateCopy = this.state.worddata;
-                    stateCopy[j].value += 1;
-                    this.setState({worddata: stateCopy});
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                var copy = this.state.worddata;
-                copy.push({text: this.state.keywords[i], value: 1})
-                this.setState({worddata: copy})
-            }
-        }
-        console.log(this.state.worddata)
     }
 
     countSentiment() {
@@ -129,8 +106,8 @@ class Results extends Component {
         if (this.state.loading) {
             return (
                 <div className="result">
-                    <Container className="twitter" fluid={true} style={{background: '#f4d4e9'}}>
-                        <Row style={{paddingTop: 20, paddingBottom: 20}}>
+                    <Container className="twitter" fluid={true}>
+                        <Row style={{paddingTop: 80, paddingBottom: 80, background: '#efc9e2'}}>
                             <Col md lg={true}>
                                 <Pie data={{
                                     labels: [
@@ -162,10 +139,17 @@ class Results extends Component {
                                 <TwitterWindow id={this.state.tweetId}/>
                             </Col>
                         </Row>
+
+                        <Row style={{paddingTop: 20, background: '#f4d4e9'}}>
+                            <Col md lg={true}>
+                                <Cloud keywords={this.state.keywords}/>
+                            </Col>
+
+                            <Col md lg={true}>
+
+                            </Col>
+                        </Row>
                     </Container>
-                    <WordCloud
-                        data={this.state.worddata}
-                    />
                 </div>
             )
         }
