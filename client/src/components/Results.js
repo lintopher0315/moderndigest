@@ -107,8 +107,17 @@ class Results extends Component {
             return (
                 <div className="result">
                     <Container className="twitter" fluid={true}>
-                        <Row style={{paddingTop: 80, paddingBottom: 80, background: '#efc9e2'}}>
-                            <Col md lg={true}>
+                        <Row style={{paddingTop: 40, background: '#efc9e2'}}>
+                            <Col md={{span: 3, offset: 2}}>
+                                <p style={styles.section}>Sentiment Analysis</p>
+                            </Col>
+
+                            <Col md={{span: 3, offset: 2}} style={{paddingLeft: 50}}>
+                                <p style={{fontFamily: 'Quicksand', fontSize: 45, paddingBottom: 20, paddingLeft: 50}}>Popular Tweets</p>
+                            </Col>
+                        </Row>
+                        <Row style={{paddingTop: 40, paddingBottom: 80, background: '#efc9e2'}}>
+                            <Col md={{span: 3, offset: 2}}>
                                 <Pie data={{
                                     labels: [
                                         'Positive',
@@ -129,19 +138,29 @@ class Results extends Component {
                                         ]
                                     }]
                                 }}
-                                //width={400}
-                                //height={400}
+                                width={400}
+                                height={400}
                                 //options={{ maintainAspectRatio: false }}
                                 />
                             </Col>
 
-                            <Col md lg={true}>
+                            <Col md={{span: 3, offset: 2}}>
                                 <TwitterWindow id={this.state.tweetId}/>
                             </Col>
                         </Row>
 
-                        <Row style={{paddingTop: 20, background: '#f4d4e9'}}>
-                            <Col md lg={true}>
+                        <Row style={{paddingTop: 40, background: '#f4d4e9'}}>
+                            <Col md={{span: 3, offset: 2}}>
+                                <p style={{fontFamily: 'Quicksand', fontSize: 45}}>Common Keywords</p>
+                            </Col>
+
+                            <Col md={{span: 3, offset: 2}}>
+
+                            </Col>
+                        </Row>
+
+                        <Row style={{background: '#f4d4e9'}}>
+                            <Col md={{span: 5, offset: 1}} style={{paddingRight: 15}}>
                                 <Cloud keywords={this.state.keywords}/>
                             </Col>
 
@@ -158,6 +177,14 @@ class Results extends Component {
 
             </div>
         )
+    }
+}
+
+let styles = {
+    section: {
+        fontFamily: 'Quicksand',
+        fontSize: 45,
+        paddingBottom: 20,
     }
 }
 
